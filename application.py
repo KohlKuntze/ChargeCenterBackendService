@@ -1,36 +1,15 @@
 from flask import Flask, request, json
-# from logging_utils import logging_configurator
-#
-#
-# logger = logging_configurator.configure_logger()
+from log_utilities import log_util_factory
 
-from logging.handlers import TimedRotatingFileHandler
-from logging import Formatter
-import logging
 
-# get named logger
-logger = logging.getLogger(__name__)
+logger = log_util_factory.create_logger()
 
-# create handler
-handler = TimedRotatingFileHandler(filename='application.log', when='D', interval=1, backupCount=90, encoding='utf-8', delay=False)
 
-# create formatter and add to handler
-formatter = Formatter(fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-
-# add the handler to named logger
-logger.addHandler(handler)
-
-# set the logging level
-logger.setLevel(logging.INFO)
-
-# --------------------------------------
-
-# log something
-logger.info("test")
+logger.info("Initiating Flask App")
 
 
 def create_app():
+    logger.info("Creating App")
     application = Flask(__name__)
 
     # flask_env = os.getenv("FLASK_ENV")
@@ -41,16 +20,19 @@ def create_app():
 application = create_app()
 
 
+logger.info("Registering Route '/' with application")
 @application.route('/')
 def index():
     return "Test"
 
 
+logger.info("Registering Route '/test_json' with application")
 @application.route('/test_json', methods=['POST'])
 def asdf():
     return "Test2"
 
 
+logger.info("Registering Route '/post_json' with application")
 @application.route('/post_json', methods=['POST'])
 def process_json():
     logger.info("received request to /post_json")
