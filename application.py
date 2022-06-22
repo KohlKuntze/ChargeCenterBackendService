@@ -24,6 +24,7 @@ application = create_app()
 logger.info("Registering Route '/' with application")
 @application.route('/')
 def index():
+    logger.info("Got request for for route /")
     return "Test"
 
 
