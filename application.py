@@ -1,35 +1,63 @@
-from flask import Flask
+from flask import Flask, request, json
+# from logging_utils import logging_configurator
+#
+#
+# logger = logging_configurator.configure_logger()
 
-# print a nice greeting.
-def say_hello(username = "World"):
-    return '<p>Hello %s!</p>\n' % username
+from logging.handlers import TimedRotatingFileHandler
+from logging import Formatter
+import logging
 
-# some bits of text for the page.
-header_text = '''
-    <html>\n<head> <title>EB Flask Test</title> </head>\n<body>'''
-instructions = '''
-    <p><em>Hint</em>: This is a RESTful web service! Append a username
-    to the URL (for example: <code>/Thelonious</code>) to say hello to
-    someone specific.</p>\n'''
-home_link = '<p><a href="/">Back</a></p>\n'
-footer_text = '</body>\n</html>'
+# get named logger
+logger = logging.getLogger(__name__)
 
-# EB looks for an 'application' callable by default.
-application = Flask(__name__)
+# create handler
+handler = TimedRotatingFileHandler(filename='application.log', when='D', interval=1, backupCount=90, encoding='utf-8', delay=False)
 
-# add a rule for the index page.
-application.add_url_rule('/', 'index', (lambda: header_text +
-    say_hello() + instructions + footer_text))
+# create formatter and add to handler
+formatter = Formatter(fmt='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
 
-# add a rule when the page is accessed with a name appended to the site
-# URL.
-application.add_url_rule('/<username>', 'hello', (lambda username:
-    header_text + say_hello(username) + home_link + footer_text))
+# add the handler to named logger
+logger.addHandler(handler)
 
-# run the app.
-if __name__ == "__main__":
-    # Setting debug to True enables debug output. This line should be
-    # removed before deploying a production app.
+# set the logging level
+logger.setLevel(logging.INFO)
+
+# --------------------------------------
+
+# log something
+logger.info("test")
+
+
+def create_app():
+    application = Flask(__name__)
+
+    # flask_env = os.getenv("FLASK_ENV")
+
+    return application
+
+
+application = create_app()
+
+
+@application.route('/')
+def index():
+    return "Test"
+
+
+@application.route('/test_json', methods=['POST'])
+def asdf():
+    return "Test2"
+
+
+@application.route('/post_json', methods=['POST'])
+def process_json():
+    logger.info("received request to /post_json")
+    data = json.loads(request.data)
+    return data
+
+
+if __name__ == '__main__':
     application.debug = True
     application.run()
-
