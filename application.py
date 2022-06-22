@@ -1,5 +1,6 @@
 from flask import Flask, request, json
 from log_utilities import log_util_factory
+from information.charger_information import charger_information_blueprint
 
 
 logger = log_util_factory.create_logger()
@@ -39,6 +40,9 @@ def process_json():
     data = json.loads(request.data)
     return data
 
+
+# Register Routes
+application.register_blueprint(charger_information_blueprint, url_prefix="/information")
 
 if __name__ == '__main__':
     application.debug = True
