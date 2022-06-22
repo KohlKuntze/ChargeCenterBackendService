@@ -58,16 +58,15 @@ def generate_random_allocations(port_info_dict: dict):
 
 
 
-@charger_information_blueprint.route('/get_charge_allocation', methods=["POST"])
+@charger_information_blueprint.route('/get_charge_allocation', methods=["POST", "GET"])
 def get_charge_allocation():
     logger.info("received request to /get_charge_allocation")
-    incoming_request = json.loads(request.data)
 
-    charger_name = incoming_request[CHARGER_NAME_KEY]
-    port_info_dict = incoming_request[PORT_INFO_KEY]
-
+    charger_name = request.args.get(CHARGER_NAME_KEY)
     logger.info("Got request for charger {}".format(charger_name))
-    logger.info("detected {} ports".format(str(len(port_info_dict))))
+
+    port_info_dict = json.loads(request.args.get(PORT_INFO_KEY))
+    logger.info(port_info_dict)
 
     new_charge_allocation_dict = generate_random_allocations(port_info_dict)
 
