@@ -8,12 +8,11 @@ logger = log_util_factory.create_logger()
 
 def configure_dynamo_client():
 
-    endpoint_url = config.DYNAMO_ENDPOINT_MAP[config.LOCAL_KEY]
+    if not config.IS_RUNNING_ON_SERVER:
+        endpoint_url = config.DYNAMO_ENDPOINT_MAP[config.LOCAL_KEY]
+        return boto3.client(DYNAMO_DB, endpoint_url=endpoint_url)
 
-    if config.IS_RUNNING_ON_SERVER:
-        endpoint_url = config.DYNAMO_ENDPOINT_MAP[config.SERVER_KEY]
-
-    return boto3.client(DYNAMO_DB, endpoint_url=endpoint_url)
+    return boto3.client(DYNAMO_DB)
 
 
 # DYNAMO_CLIENT = configure_dynamo_client()
