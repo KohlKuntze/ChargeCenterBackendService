@@ -12,7 +12,7 @@ def configure_dynamo_client():
         endpoint_url = config.DYNAMO_ENDPOINT_MAP[config.LOCAL_KEY]
         return boto3.client(DYNAMO_DB, endpoint_url=endpoint_url)
 
-    return boto3.client(DYNAMO_DB)
+    return boto3.client(DYNAMO_DB, region_name=config.SERVICE_REGION)
 
 
 # DYNAMO_CLIENT = configure_dynamo_client()
