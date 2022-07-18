@@ -24,6 +24,12 @@ application.register_blueprint(charger_information_blueprint, url_prefix="/infor
 
 # Register Routes
 
+logger.info("Registering Route '/' with application")
+@application.route('/')
+def index():
+    logger.info("Got request for for route /")
+    return "Test"
+
 if __name__ == '__main__':
     application.debug = True
     application.run()

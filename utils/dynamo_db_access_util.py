@@ -16,9 +16,11 @@ def configure_dynamo_client():
     return boto3.client(DYNAMO_DB, endpoint_url=endpoint_url)
 
 
-DYNAMO_CLIENT = configure_dynamo_client()
+# DYNAMO_CLIENT = configure_dynamo_client()
 
 def get_item():
+    DYNAMO_CLIENT = configure_dynamo_client()
+
     response = DYNAMO_CLIENT.get_item(
         TableName='ChargerAllocation',
         Key={
