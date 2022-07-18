@@ -1,5 +1,6 @@
 from flask import Blueprint, request, json
 from log_utilities import log_util_factory
+from utils import dynamo_db_access_util
 import os, sys
 import random
 
@@ -58,21 +59,28 @@ def generate_random_allocations(port_info_dict: dict):
 
 
 
-@charger_information_blueprint.route('/get_charge_allocation', methods=["POST", "GET"])
+# @charger_information_blueprint.route('/get_charge_allocation', methods=["POST", "GET"])
+# def get_charge_allocation():
+#     logger.info("received request to /get_charge_allocation")
+#
+#     charger_name = request.args.get(CHARGER_NAME_KEY)
+#     logger.info("Got request for charger {}".format(charger_name))
+#
+#     port_info_dict = json.loads(request.args.get(PORT_INFO_KEY))
+#     logger.info(port_info_dict)
+#
+#     new_charge_allocation_dict = generate_random_allocations(port_info_dict)
+#
+#     charger_response = {
+#         CHARGER_NAME_KEY: charger_name,
+#         PORT_INFO_KEY: new_charge_allocation_dict
+#     }
+#
+#     return charger_response
+
+
+@charger_information_blueprint.route('/get_charger_allocation', methods=["GET"])
 def get_charge_allocation():
-    logger.info("received request to /get_charge_allocation")
+    logger.info("received request to /get_charger_allocation")
 
-    charger_name = request.args.get(CHARGER_NAME_KEY)
-    logger.info("Got request for charger {}".format(charger_name))
-
-    port_info_dict = json.loads(request.args.get(PORT_INFO_KEY))
-    logger.info(port_info_dict)
-
-    new_charge_allocation_dict = generate_random_allocations(port_info_dict)
-
-    charger_response = {
-        CHARGER_NAME_KEY: charger_name,
-        PORT_INFO_KEY: new_charge_allocation_dict
-    }
-
-    return charger_response
+    return dynamo_db_access_util.get_item()
