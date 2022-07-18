@@ -18,7 +18,9 @@ def configure_dynamo_client():
 # DYNAMO_CLIENT = configure_dynamo_client()
 
 def get_item():
+    logger.info("Getting item")
     DYNAMO_CLIENT = configure_dynamo_client()
+    logger.info("DYNAMO_CLIENT configured")
 
     response = DYNAMO_CLIENT.get_item(
         TableName='ChargerAllocation',
@@ -26,5 +28,7 @@ def get_item():
             "ChargerId": {"S": "Charger-1"}
         }
     )
+
+    logger.info("Dynamo response: " + str(response))
 
     return response
